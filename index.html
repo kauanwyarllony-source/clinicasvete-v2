@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clínica Veterinária</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F7F5; --ink:#16282B; --teal:#0F5B5C; --teal-soft:#DCEDE9;
+  --sun:#FFC93C; --coral:#C9473A; --line:#C3D9D3; --wa:#1FAF5A; --muted:#41595c;
+}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;padding-bottom:150px}
+h1,h2,h3{font-family:'Fredoka',system-ui,sans-serif;font-weight:600;line-height:1.2}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.hidden{display:none!important}
+.wrap{max-width:600px;margin:0 auto;padding:16px}
+a{color:inherit}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:14px 20px;font-weight:700;cursor:pointer;width:100%;text-decoration:none;text-align:center}
+.btn-main{background:var(--teal);color:#fff}
+.btn-sun{background:var(--sun);color:var(--ink)}
+.btn-line{background:transparent;border:2px solid var(--teal);color:var(--teal)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-small{width:auto;padding:8px 14px;font-size:.88rem;border-radius:12px}
+
+/* campos */
+label{display:block;font-weight:700;margin-bottom:6px}
+.field{margin-bottom:14px}
+input,select,textarea{width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fff}
+input:focus,select:focus,textarea:focus{border-color:var(--teal)}
+.row{display:grid;grid-template-columns:1fr 1.6fr 1.2fr;gap:10px}
+.erro{color:var(--coral);font-weight:700;margin:-4px 0 12px;min-height:1.2em}
+small{display:block;color:var(--muted)}
+
+/* login */
+.auth{min-height:100vh;display:flex;align-items:center}
+.auth-card{background:#fff;border-radius:24px;padding:28px 22px;width:100%;box-shadow:0 10px 30px rgba(15,91,92,.12)}
+.auth-card h1{font-size:1.8rem;color:var(--teal);margin-bottom:6px}
+.auth-card p.sub{margin-bottom:20px;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--teal-soft);border-radius:14px;padding:4px;margin-bottom:20px}
+.tabs button{border:0;background:transparent;padding:10px;border-radius:11px;font-weight:700;cursor:pointer}
+.tabs button[aria-selected="true"]{background:#fff;color:var(--teal)}
+
+/* topo */
+.top{background:var(--teal);color:#fff}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:12px;padding-bottom:12px}
+.top strong{font-family:'Fredoka',sans-serif;font-size:1.2rem}
+.top .btn{background:rgba(255,255,255,.16);color:#fff}
+h2.t{font-size:1.6rem;color:var(--teal);margin:8px 0 2px}
+p.s{color:var(--muted);margin-bottom:4px}
+
+/* cards e listas */
+.card{background:#fff;border-radius:20px;padding:18px;margin-top:14px;box-shadow:0 6px 20px rgba(15,91,92,.08)}
+.card h3{margin-bottom:12px;font-size:1.1rem}
+.especies{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.especies button{border:2px solid var(--line);background:#fff;border-radius:12px;padding:10px 4px;font-weight:700;cursor:pointer}
+.especies button[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);color:var(--teal)}
+.servico-btn{width:100%;text-align:left;border:2px dashed var(--teal);background:var(--teal-soft);border-radius:14px;padding:14px;cursor:pointer;font-weight:700;color:var(--teal)}
+.servico-btn small{margin-top:2px;font-weight:600;color:var(--ink)}
+.item{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px;margin-top:10px;cursor:pointer}
+.item .ico{font-size:1.8rem}
+.item b{display:block}
+.li{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.li:first-of-type{border-top:0}
+.li b{display:block}
+.vazio{color:var(--muted);padding:6px 0}
+.acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.badge{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--teal-soft);color:var(--teal);margin-left:6px;vertical-align:middle}
+.b-ok{background:#D6F2E0;color:#176B3A}
+.b-no{background:#F8DAD6;color:#9A2B20}
+.b-wait{background:#FFF1C2;color:#7A5A00}
+.ok{background:var(--sun);border-radius:20px;padding:18px;margin-top:14px}
+.ok h3{margin-bottom:6px}
+.ok .btn{margin-top:12px}
+
+/* painel */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.stat{background:#fff;border-radius:18px;padding:16px;box-shadow:0 6px 20px rgba(15,91,92,.08)}
+.stat b{display:block;font-family:'Fredoka',sans-serif;font-size:1.6rem;color:var(--teal)}
+.stat span{font-size:.88rem;color:var(--muted)}
+
+/* ficha / abas internas */
+.seg{display:flex;gap:6px;overflow-x:auto;margin-top:14px;padding-bottom:2px}
+.seg button{flex:0 0 auto;border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.add{background:var(--teal-soft);border-radius:14px;padding:12px;margin-bottom:8px}
+.add .field{margin-bottom:10px}
+
+/* avaliações */
+.estrelas{display:flex;gap:4px}
+.estrelas button{border:0;background:transparent;font-size:2rem;cursor:pointer;color:#C9D6D3;line-height:1}
+.estrelas button[aria-pressed="true"]{color:#E5A800}
+.nota{color:#E5A800;letter-spacing:2px}
+
+/* sheets */
+.sheet{position:fixed;inset:0;background:var(--bg);z-index:30;overflow-y:auto;padding-bottom:110px}
+.sheet header{position:sticky;top:0;background:var(--bg);padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:2}
+.sheet header h2{font-size:1.3rem;color:var(--teal)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;max-width:600px;margin:0 auto}
+.svc{background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px 10px;text-align:center;cursor:pointer;position:relative}
+.svc .ico{font-size:2rem}
+.svc h3{font-size:1rem;margin:6px 0 2px}
+.svc p{font-size:.8rem;color:var(--muted)}
+.svc strong{display:block;margin-top:4px;color:var(--teal);font-size:.9rem}
+.svc[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft)}
+.svc[aria-pressed="true"]::after{content:"✓";position:absolute;top:8px;right:10px;background:var(--teal);color:#fff;border-radius:50%;width:22px;height:22px;font-size:.8rem;display:grid;place-items:center;font-weight:700}
+.sheet footer{position:fixed;left:0;right:0;bottom:0;padding:14px 16px;background:#fff;border-top:1px solid var(--line)}
+.sheet footer .btn{max-width:568px;margin:0 auto;display:flex}
+.corpo{max-width:600px;margin:0 auto;padding:0 16px 16px}
+
+/* navegação inferior + whatsapp */
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:20;padding-bottom:env(safe-area-inset-bottom,0)}
+.bottom button{border:0;background:transparent;padding:8px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:0;font-size:1.3rem;cursor:pointer;position:relative;color:var(--muted)}
+.bottom button span{font-size:.7rem;font-weight:700}
+.bottom button[aria-current="true"]{color:var(--teal)}
+.bottom button[aria-current="true"]::before{content:"";position:absolute;top:0;left:25%;right:25%;height:3px;background:var(--teal);border-radius:0 0 3px 3px}
+#badge{position:absolute;top:2px;right:18%;background:var(--coral);color:#fff;font-size:.65rem;font-weight:700;border-radius:999px;min-width:18px;height:18px;display:grid;place-items:center;padding:0 4px}
+.wa{position:fixed;right:14px;bottom:84px;background:var(--wa);color:#fff;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:15}
+.sheet:not(.hidden) ~ .wa{display:none}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:sobe .2s ease-out}@keyframes sobe{from{transform:translateY(24px);opacity:0}}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<main id="auth" class="auth">
+  <div class="wrap" style="width:100%">
+    <div class="auth-card">
+      <h1 id="nomeClinica1"></h1>
+      <p class="sub">Entre para acessar a clínica.</p>
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tabEntrar" aria-selected="true">Entrar</button>
+        <button type="button" role="tab" id="tabCriar" aria-selected="false">Criar conta</button>
+      </div>
+      <form id="formAuth" autocomplete="on">
+        <div class="field"><label for="usuario">Login</label><input id="usuario" autocomplete="username" required></div>
+        <div class="field"><label for="senha">Senha</label><input id="senha" type="password" autocomplete="current-password" required></div>
+        <p class="erro" id="erroAuth" role="alert"></p>
+        <button class="btn btn-main" id="btnAuth" type="submit">Entrar</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <div class="top"><div class="wrap">
+    <strong id="nomeClinica2"></strong>
+    <button class="btn btn-small" id="btnSair" type="button">Sair</button>
+  </div></div>
+
+  <main class="wrap">
+
+    <!-- AGENDAR -->
+    <section id="tela-agendar" class="tela">
+      <h2 class="t">Agende o atendimento</h2>
+      <p class="s">Preencha os dados e escolha o que o pet precisa.</p>
+
+      <form id="formAgenda" class="card" novalidate>
+        <h3>👤 Responsável</h3>
+        <div class="field"><label for="whats">WhatsApp</label><input id="whats" type="tel" inputmode="tel" placeholder="(11) 90000-0000" autocomplete="tel"></div>
+        <div class="field"><label for="tutor">Nome do responsável</label><input id="tutor" autocomplete="name"></div>
+        <div class="field"><label for="tel">Telefone</label><input id="tel" type="tel" inputmode="tel" placeholder="Opcional"></div>
+        <div class="field"><label for="end">Endereço</label><input id="end" placeholder="Opcional" autocomplete="street-address"></div>
+
+        <h3 style="margin-top:20px">🐾 Animal</h3>
+        <div class="field">
+          <label>Tipo de animal</label>
+          <div class="especies" id="especies">
+            <button type="button" data-v="cachorro" aria-pressed="true">🐶 Cachorro</button>
+            <button type="button" data-v="gato" aria-pressed="false">🐱 Gato</button>
+            <button type="button" data-v="outro" aria-pressed="false">🐾 Outro</button>
+          </div>
+        </div>
+        <div class="field"><label for="pet">Nome do animal</label><input id="pet"></div>
+        <div class="field"><label for="raca">Raça</label><input id="raca" list="listaRacas" placeholder="Digite ou escolha"><datalist id="listaRacas"></datalist></div>
+
+        <h3 style="margin-top:20px">🩺 Atendimento</h3>
+        <div class="field">
+          <label>Tipo de serviço</label>
+          <button type="button" class="servico-btn" id="abrirServicos">Escolher serviços<small id="resumoServicos">Nenhum serviço escolhido</small></button>
+        </div>
+        <div class="field">
+          <label>Data</label>
+          <div class="row">
+            <select id="dia" aria-label="Dia"></select>
+            <select id="mes" aria-label="Mês"></select>
+            <select id="ano" aria-label="Ano"></select>
+          </div>
+        </div>
+        <p class="erro" id="erroAgenda" role="alert"></p>
+        <button class="btn btn-sun" type="submit">Agende o seu horário</button>
+      </form>
+
+      <div id="confirmacao" class="ok hidden">
+        <h3>Horário reservado!</h3>
+        <p>Envie a mensagem para a clínica pelo WhatsApp para finalizar.</p>
+        <a class="btn btn-wa" id="linkConfirmar" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+      </div>
+    </section>
+
+    <!-- ANIMAIS -->
+    <section id="tela-animais" class="tela hidden">
+      <h2 class="t">Animais</h2>
+      <p class="s">Toque em um animal para ver a ficha e o histórico.</p>
+      <div class="field" style="margin-top:12px"><input id="busca" type="search" placeholder="Buscar por animal ou responsável"></div>
+      <div id="listaAnimais"></div>
+    </section>
+
+    <!-- LEMBRETES -->
+    <section id="tela-lembretes" class="tela hidden">
+      <h2 class="t">🔔 Lembretes</h2>
+      <p class="s">Consultas dos próximos dias e vacinas chegando. Toque para avisar o cliente pelo WhatsApp.</p>
+      <div class="card"><h3>Consultas próximas</h3><div id="lembConsultas"></div></div>
+      <div class="card"><h3>Vacinas a vencer</h3><div id="lembVacinas"></div></div>
+    </section>
+
+    <!-- PAINEL -->
+    <section id="tela-painel" class="tela hidden">
+      <h2 class="t">📊 Painel</h2>
+      <div class="stats" id="stats"></div>
+      <div class="card"><h3>Consultas</h3><div id="listaConsultas"></div></div>
+      <div id="blocoDemo" class="card hidden">
+        <h3>Dados de exemplo</h3>
+        <p class="vazio">Estes dados são só para você testar.</p>
+        <button class="btn btn-line" id="apagarDemo" type="button" style="margin-top:8px">Apagar dados de exemplo</button>
+      </div>
+    </section>
+
+    <!-- AVALIAÇÕES -->
+    <section id="tela-avaliacoes" class="tela hidden">
+      <h2 class="t">⭐ Avaliações</h2>
+      <p class="s" id="mediaAval"></p>
+      <form id="formAval" class="card" novalidate>
+        <h3>Deixe sua avaliação</h3>
+        <div class="field"><label for="avNome">Seu nome</label><input id="avNome"></div>
+        <div class="field"><label>Nota</label><div class="estrelas" id="estrelas"></div></div>
+        <div class="field"><label for="avTexto">Comentário</label><textarea id="avTexto" rows="3" placeholder="Opcional"></textarea></div>
+        <p class="erro" id="erroAval" role="alert"></p>
+        <button class="btn btn-main" type="submit">Enviar avaliação</button>
+      </form>
+      <div class="card"><h3>O que dizem os clientes</h3><div id="listaAval"></div></div>
+    </section>
+  </main>
+</div>
+
+<!-- SHEET: DASHBOARD DE SERVIÇOS -->
+<section id="sheet" class="sheet hidden" aria-label="Serviços">
+  <header><h2>Escolha os serviços</h2><button type="button" class="btn btn-line btn-small" id="fecharServicos">Voltar</button></header>
+  <div class="grid" id="gridServicos"></div>
+  <footer><button type="button" class="btn btn-main" id="confirmarServicos">Confirmar serviços</button></footer>
+</section>
+
+<!-- SHEET: FICHA DO ANIMAL -->
+<section id="sheetFicha" class="sheet hidden" aria-label="Ficha do animal">
+  <header><h2 id="fichaTitulo"></h2><button type="button" class="btn btn-line btn-small" id="fecharFicha">Voltar</button></header>
+  <div class="corpo" id="fichaCorpo"></div>
+</section>
+
+<a class="wa" id="waFlutuante" target="_blank" rel="noopener">💬 WhatsApp</a>
+
+<nav class="bottom" id="nav" aria-label="Navegação">
+  <button data-tela="agendar">🗓<span>Agendar</span></button>
+  <button data-tela="animais">🐾<span>Animais</span></button>
+  <button data-tela="lembretes">🔔<span>Lembretes</span><b id="badge" class="hidden"></b></button>
+  <button data-tela="painel">📊<span>Painel</span></button>
+  <button data-tela="avaliacoes">⭐<span>Avaliações</span></button>
+</nav>
+
+<script>
+/* ===== CONFIGURE AQUI ===== */
+const CLINICA  = "Clínica Veterinária";
+const WHATSAPP = "5511999999999";   // WhatsApp da clínica: 55 + DDD + número
+const JANELA_CONSULTA = 7;          // avisar consultas dos próximos X dias
+const JANELA_VACINA   = 30;         // avisar vacinas dos próximos X dias
+
+const SERVICOS = [
+  {id:"consulta",  nome:"Consulta",     desc:"Avaliação geral de saúde", icone:"🩺", preco:120},
+  {id:"vacina",    nome:"Vacinação",    desc:"Vacinas e reforços",       icone:"💉", preco:90},
+  {id:"banho",     nome:"Banho e tosa", desc:"Higiene e cuidado",        icone:"🛁", preco:70},
+  {id:"exames",    nome:"Exames",       desc:"Sangue, imagem e mais",    icone:"🔬", preco:150},
+  {id:"cirurgia",  nome:"Cirurgia",     desc:"Procedimentos cirúrgicos", icone:"🏥", preco:600},
+  {id:"castracao", nome:"Castração",    desc:"Procedimento eletivo",     icone:"✂️", preco:450},
+  {id:"vermi",     nome:"Vermifugação", desc:"Controle de parasitas",    icone:"💊", preco:40},
+  {id:"dentista",  nome:"Odontologia",  desc:"Limpeza e tratamento",     icone:"🦷", preco:250},
+  {id:"microchip", nome:"Microchip",    desc:"Identificação do pet",     icone:"📍", preco:100},
+  {id:"emergencia",nome:"Emergência",   desc:"Atendimento urgente",      icone:"🚨", preco:200}
+];
+const RACAS = {
+  cachorro:["Sem raça definida (SRD)","Shih Tzu","Poodle","Golden Retriever","Labrador","Pinscher","Yorkshire","Lhasa Apso","Pitbull","Bulldog Francês","Pastor Alemão","Rottweiler","Spitz Alemão","Maltês","Border Collie","Husky Siberiano"],
+  gato:["Sem raça definida (SRD)","Siamês","Persa","Maine Coon","Angorá","Ragdoll","Bengal","Sphynx"],
+  outro:[]
+};
+const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const ICONE = {cachorro:"🐶",gato:"🐱",outro:"🐾"};
+const STATUS = {agendada:["Agendada","b-wait"],realizada:["Realizada","b-ok"],cancelada:["Cancelada","b-no"]};
+
+/* ===== utilidades ===== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const digits = s => String(s || "").replace(/\D/g, "");
+const brl = n => Number(n || 0).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const hojeISO = () => iso(new Date());
+const addDias = n => { const d = new Date(); d.setDate(d.getDate() + n); return iso(d); };
+const br = i => { if (!i) return ""; const [y,m,d] = i.split("-"); return `${d}/${m}/${y}`; };
+const diffDias = i => { const [y,m,d] = i.split("-").map(Number); const h = new Date(); h.setHours(0,0,0,0); return Math.round((new Date(y,m-1,d) - h) / 864e5); };
+const quando = n => n === 0 ? "hoje" : n === 1 ? "amanhã" : n < 0 ? `atrasada há ${-n} dia(s)` : `em ${n} dias`;
+const load = (k,d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch { return d; } };
+const save = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const numWa = n => { let d = digits(n); if (d.length <= 11) d = "55" + d; return d; };
+const waCliente = (n,t) => `https://wa.me/${numWa(n)}?text=${encodeURIComponent(t)}`;
+const waClinica = t => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(t)}`;
+const svc = id => SERVICOS.find(s => s.id === id);
+const precoDe = ids => ids.reduce((t,i) => t + (svc(i)?.preco || 0), 0);
+const nomesDe = ids => ids.map(i => svc(i)?.nome).filter(Boolean).join(", ");
+
+/* ===== dados ===== */
+function seed(){
+  const c1 = {id:"c1", nome:"Maria Souza", telefone:"(11) 3333-4444", endereco:"Rua das Flores, 120 - Centro", whatsapp:"(11) 98888-7777"};
+  const c2 = {id:"c2", nome:"João Lima", telefone:"", endereco:"Av. Brasil, 850", whatsapp:"(21) 97777-6666"};
+  return {
+    demo:true,
+    clientes:[c1,c2],
+    animais:[
+      {id:"a1", clienteId:"c1", nome:"Thor", especie:"cachorro", raca:"Golden Retriever",
+        vacinas:[{id:"v1", nome:"V10", data:addDias(-350), proxima:addDias(10)}],
+        medicamentos:[{id:"m1", nome:"Vermífugo", dose:"1 comprimido", data:addDias(-20)}],
+        observacoes:[{id:"o1", texto:"Fica nervoso com barulho de secador.", data:addDias(-40)}]},
+      {id:"a2", clienteId:"c1", nome:"Mia", especie:"gato", raca:"Siamês", vacinas:[], medicamentos:[], observacoes:[]},
+      {id:"a3", clienteId:"c2", nome:"Bob", especie:"cachorro", raca:"Sem raça definida (SRD)",
+        vacinas:[{id:"v2", nome:"Antirrábica", data:addDias(-365), proxima:addDias(-3)}], medicamentos:[], observacoes:[]}
+    ],
+    consultas:[
+      {id:"k1", clienteId:"c1", animalId:"a1", servicos:["consulta","vacina"], data:addDias(2), status:"agendada", confirmada:false, valor:0},
+      {id:"k2", clienteId:"c1", animalId:"a2", servicos:["banho"], data:addDias(5), status:"agendada", confirmada:true, valor:0},
+      {id:"k3", clienteId:"c2", animalId:"a3", servicos:["consulta"], data:addDias(-10), status:"realizada", confirmada:true, valor:120},
+      {id:"k4", clienteId:"c1", animalId:"a1", servicos:["vacina"], data:addDias(-40), status:"realizada", confirmada:true, valor:90},
+      {id:"k5", clienteId:"c1", animalId:"a2", servicos:["exames"], data:addDias(-3), status:"realizada", confirmada:true, valor:150}
+    ],
+    avaliacoes:[
+      {id:"r1", nome:"Maria S.", nota:5, texto:"Atendimento carinhoso, o Thor adorou!", data:addDias(-12)},
+      {id:"r2", nome:"João L.", nota:4, texto:"Rápidos e atenciosos.", data:addDias(-8)}
+    ]
+  };
+}
+let db = load("vet2_db", null);
+if (!db) { db = seed(); save("vet2_db", db); }
+const persist = () => save("vet2_db", db);
+const cli = id => db.clientes.find(c => c.id === id) || {nome:"—", telefone:"", endereco:"", whatsapp:""};
+const an = id => db.animais.find(a => a.id === id);
+
+$("#nomeClinica1").textContent = CLINICA;
+$("#nomeClinica2").textContent = CLINICA;
+$("#waFlutuante").href = waClinica(`Olá! Gostaria de falar com a ${CLINICA}.`);
+document.title = CLINICA;
+
+/* ===== login ===== */
+const _u = load("vet2_users", {});
+if (!_u.demo) { _u.demo = "1234"; save("vet2_users", _u); } // conta de teste: demo / 1234 (pode apagar)
+
+let modo = "entrar";
+function setModo(m){
+  modo = m;
+  $("#tabEntrar").setAttribute("aria-selected", m === "entrar");
+  $("#tabCriar").setAttribute("aria-selected", m === "criar");
+  $("#btnAuth").textContent = m === "entrar" ? "Entrar" : "Criar conta";
+  $("#senha").autocomplete = m === "entrar" ? "current-password" : "new-password";
+  $("#erroAuth").textContent = "";
+}
+$("#tabEntrar").onclick = () => setModo("entrar");
+$("#tabCriar").onclick = () => setModo("criar");
+$("#formAuth").addEventListener("submit", e => {
+  e.preventDefault();
+  const user = $("#usuario").value.trim().toLowerCase(), pass = $("#senha").value;
+  const users = load("vet2_users", {});
+  if (modo === "criar") {
+    if (users[user]) return $("#erroAuth").textContent = "Esse login já existe. Escolha outro.";
+    if (pass.length < 4) return $("#erroAuth").textContent = "A senha precisa ter pelo menos 4 caracteres.";
+    users[user] = pass; save("vet2_users", users);
+  } else if (users[user] !== pass) {
+    return $("#erroAuth").textContent = "Login ou senha incorretos.";
+  }
+  save("vet2_session", user);
+  entrar();
+});
+$("#btnSair").onclick = () => { localStorage.removeItem("vet2_session"); location.reload(); };
+
+/* ===== navegação ===== */
+let telaAtual = "agendar";
+const TELAS = {agendar:()=>{}, animais:renderAnimais, lembretes:renderLembretes, painel:renderPainel, avaliacoes:renderAval};
+function setTela(t){
+  telaAtual = t;
+  document.querySelectorAll(".tela").forEach(s => s.classList.toggle("hidden", s.id !== "tela-" + t));
+  document.querySelectorAll("#nav button").forEach(b => b.setAttribute("aria-current", b.dataset.tela === t));
+  TELAS[t](); atualizarBadge(); window.scrollTo(0,0);
+}
+document.querySelectorAll("#nav button").forEach(b => b.onclick = () => setTela(b.dataset.tela));
+function entrar(){
+  if (!load("vet2_session", null)) return;
+  $("#auth").classList.add("hidden");
+  $("#app").classList.remove("hidden");
+  setTela("agendar");
+}
+const travar = on => { document.body.style.overflow = on ? "hidden" : ""; };
+
+/* ===== AGENDAR ===== */
+let especie = "cachorro";
+const escolhidos = new Set();
+
+(function preencherData(){
+  const h = new Date(), a = h.getFullYear();
+  $("#dia").innerHTML = Array.from({length:31}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join("");
+  $("#mes").innerHTML = MESES.map((m,i) => `<option value="${i}">${m}</option>`).join("");
+  $("#ano").innerHTML = [a, a+1].map(y => `<option>${y}</option>`).join("");
+  $("#dia").value = h.getDate(); $("#mes").value = h.getMonth();
+})();
+
+function setEspecie(v){
+  especie = v;
+  document.querySelectorAll("#especies button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v));
+  $("#listaRacas").innerHTML = RACAS[v].map(r => `<option value="${esc(r)}">`).join("");
+  $("#raca").value = "";
+}
+document.querySelectorAll("#especies button").forEach(b => b.onclick = () => setEspecie(b.dataset.v));
+setEspecie("cachorro");
+
+$("#whats").addEventListener("blur", () => {
+  const d = digits($("#whats").value);
+  if (d.length < 10) return;
+  const c = db.clientes.find(c => digits(c.whatsapp) === d);
+  if (!c) return;
+  if (!$("#tutor").value) $("#tutor").value = c.nome;
+  if (!$("#tel").value) $("#tel").value = c.telefone;
+  if (!$("#end").value) $("#end").value = c.endereco;
+});
+
+function renderServicos(){
+  const g = $("#gridServicos"); g.innerHTML = "";
+  SERVICOS.forEach(s => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "svc";
+    b.setAttribute("aria-pressed", escolhidos.has(s.id));
+    b.innerHTML = `<div class="ico">${s.icone}</div><h3>${s.nome}</h3><p>${s.desc}</p><strong>${brl(s.preco)}</strong>`;
+    b.onclick = () => {
+      escolhidos.has(s.id) ? escolhidos.delete(s.id) : escolhidos.add(s.id);
+      b.setAttribute("aria-pressed", escolhidos.has(s.id));
+      $("#confirmarServicos").textContent = escolhidos.size ? `Confirmar (${escolhidos.size})` : "Confirmar serviços";
+    };
+    g.appendChild(b);
+  });
+}
+function atualizarResumo(){
+  const n = nomesDe([...escolhidos]);
+  $("#resumoServicos").textContent = n || "Nenhum serviço escolhido";
+}
+$("#abrirServicos").onclick = () => { renderServicos(); $("#sheet").classList.remove("hidden"); travar(true); };
+const fecharSheet = () => { $("#sheet").classList.add("hidden"); travar(false); atualizarResumo(); };
+$("#fecharServicos").onclick = fecharSheet;
+$("#confirmarServicos").onclick = fecharSheet;
+
+$("#formAgenda").addEventListener("submit", e => {
+  e.preventDefault();
+  const erro = m => { $("#erroAgenda").textContent = m; };
+  const whats = $("#whats").value.trim(), tutor = $("#tutor").value.trim(), tel = $("#tel").value.trim(), end = $("#end").value.trim();
+  const pet = $("#pet").value.trim(), raca = $("#raca").value.trim();
+  const d = +$("#dia").value, m = +$("#mes").value, a = +$("#ano").value;
+  if (digits(whats).length < 10) return erro("Informe o WhatsApp com DDD.");
+  if (!tutor) return erro("Informe o nome do responsável.");
+  if (!pet) return erro("Informe o nome do animal.");
+  if (!raca) return erro("Informe a raça do animal.");
+  if (!escolhidos.size) return erro("Escolha pelo menos um serviço.");
+  const data = new Date(a, m, d);
+  if (data.getMonth() !== m) return erro("Essa data não existe. Confira o dia e o mês.");
+  const h = new Date(); h.setHours(0,0,0,0);
+  if (data < h) return erro("Escolha uma data a partir de hoje.");
+  erro("");
+
+  let c = db.clientes.find(c => digits(c.whatsapp) === digits(whats));
+  if (c) Object.assign(c, {nome:tutor, telefone:tel, endereco:end});
+  else { c = {id:uid(), nome:tutor, telefone:tel, endereco:end, whatsapp:whats}; db.clientes.push(c); }
+  let p = db.animais.find(x => x.clienteId === c.id && x.nome.toLowerCase() === pet.toLowerCase());
+  if (!p) { p = {id:uid(), clienteId:c.id, nome:pet, especie, raca, vacinas:[], medicamentos:[], observacoes:[]}; db.animais.push(p); }
+  const k = {id:uid(), clienteId:c.id, animalId:p.id, servicos:[...escolhidos], data:iso(data), status:"agendada", confirmada:false, valor:0};
+  db.consultas.push(k); persist();
+
+  $("#linkConfirmar").href = waClinica(`Olá! Quero agendar na ${CLINICA}.\nResponsável: ${tutor}\nAnimal: ${pet} (${especie}, ${raca})\nServiços: ${nomesDe(k.servicos)}\nData: ${br(k.data)}`);
+  $("#confirmacao").classList.remove("hidden");
+  $("#confirmacao").scrollIntoView({behavior:"smooth", block:"center"});
+  $("#pet").value = ""; $("#raca").value = ""; escolhidos.clear(); atualizarResumo(); atualizarBadge();
+});
+
+/* ===== ANIMAIS + FICHA ===== */
+function renderAnimais(){
+  const q = $("#busca").value.trim().toLowerCase();
+  const lista = db.animais.filter(a => !q || a.nome.toLowerCase().includes(q) || cli(a.clienteId).nome.toLowerCase().includes(q));
+  $("#listaAnimais").innerHTML = lista.length
+    ? lista.map(a => `<button class="item" data-id="${a.id}"><span class="ico">${ICONE[a.especie]}</span><span><b>${esc(a.nome)}</b><small>${esc(a.raca)} · ${esc(cli(a.clienteId).nome)}</small></span></button>`).join("")
+    : '<p class="vazio">Nenhum animal encontrado.</p>';
+}
+$("#busca").addEventListener("input", renderAnimais);
+$("#listaAnimais").addEventListener("click", e => { const b = e.target.closest("[data-id]"); if (b) abrirFicha(b.dataset.id); });
+
+let fichaId = null, fichaTab = "consultas";
+function abrirFicha(id){ fichaId = id; fichaTab = "consultas"; renderFicha(); $("#sheetFicha").classList.remove("hidden"); travar(true); }
+$("#fecharFicha").onclick = () => { $("#sheetFicha").classList.add("hidden"); travar(false); renderAnimais(); atualizarBadge(); };
+
+function renderFicha(){
+  const a = an(fichaId), c = cli(a.clienteId);
+  $("#fichaTitulo").textContent = `${ICONE[a.especie]} ${a.nome}`;
+  const abas = [["consultas","Consultas"],["vacinas","Vacinas"],["medicamentos","Medicamentos"],["observacoes","Observações"]];
+  const desc = (arr, campo) => [...arr].sort((x,y) => (y[campo] || "").localeCompare(x[campo] || ""));
+  const del = (k,id) => `<button class="btn btn-line btn-small" data-del="${k}:${id}">Remover</button>`;
+  let corpo = "";
+
+  if (fichaTab === "consultas") {
+    const l = desc(db.consultas.filter(k => k.animalId === a.id), "data");
+    corpo = l.length ? l.map(k => `<div class="li"><div><b>${br(k.data)} <span class="badge ${STATUS[k.status][1]}">${STATUS[k.status][0]}</span></b><small>${esc(nomesDe(k.servicos))}${k.status === "realizada" ? " · " + brl(k.valor) : ""}</small></div></div>`).join("")
+      : '<p class="vazio">Nenhuma consulta registrada.</p>';
+  }
+  if (fichaTab === "vacinas") {
+    corpo = `<div class="add">
+      <div class="field"><label for="f-nome">Vacina</label><input id="f-nome" placeholder="Ex.: V10"></div>
+      <div class="field"><label for="f-data">Data aplicada</label><input id="f-data" type="date" value="${hojeISO()}"></div>
+      <div class="field"><label for="f-prox">Próxima dose</label><input id="f-prox" type="date"></div>
+      <button class="btn btn-main" data-add="vacinas">Adicionar vacina</button></div>`;
+    const l = desc(a.vacinas, "data");
+    corpo += l.length ? l.map(v => `<div class="li"><div><b>${esc(v.nome)}</b><small>Aplicada em ${br(v.data)}${v.proxima ? " · Próxima: " + br(v.proxima) : ""}</small></div>${del("vacinas", v.id)}</div>`).join("")
+      : '<p class="vazio">Nenhuma vacina registrada.</p>';
+  }
+  if (fichaTab === "medicamentos") {
+    corpo = `<div class="add">
+      <div class="field"><label for="f-nome">Medicamento</label><input id="f-nome"></div>
+      <div class="field"><label for="f-dose">Dose / instruções</label><input id="f-dose" placeholder="Ex.: 1 comprimido por dia"></div>
+      <div class="field"><label for="f-data">Data de início</label><input id="f-data" type="date" value="${hojeISO()}"></div>
+      <button class="btn btn-main" data-add="medicamentos">Adicionar medicamento</button></div>`;
+    const l = desc(a.medicamentos, "data");
+    corpo += l.length ? l.map(m => `<div class="li"><div><b>${esc(m.nome)}</b><small>${esc(m.dose)}${m.dose ? " · " : ""}${br(m.data)}</small></div>${del("medicamentos", m.id)}</div>`).join("")
+      : '<p class="vazio">Nenhum medicamento registrado.</p>';
+  }
+  if (fichaTab === "observacoes") {
+    corpo = `<div class="add">
+      <div class="field"><label for="f-texto">Observação</label><textarea id="f-texto" rows="3"></textarea></div>
+      <button class="btn btn-main" data-add="observacoes">Adicionar observação</button></div>`;
+    const l = desc(a.observacoes, "data");
+    corpo += l.length ? l.map(o => `<div class="li"><div><b>${br(o.data)}</b><small>${esc(o.texto)}</small></div>${del("observacoes", o.id)}</div>`).join("")
+      : '<p class="vazio">Nenhuma observação registrada.</p>';
+  }
+
+  $("#fichaCorpo").innerHTML = `
+    <div class="card"><h3>👤 Responsável</h3>
+      <p><b>${esc(c.nome)}</b></p>
+      <small>Telefone: ${esc(c.telefone) || "—"}</small>
+      <small>WhatsApp: ${esc(c.whatsapp) || "—"}</small>
+      <small>Endereço: ${esc(c.endereco) || "—"}</small>
+      <div class="acoes"><a class="btn btn-wa btn-small" target="_blank" rel="noopener" href="${waCliente(c.whatsapp, `Olá, ${c.nome}! Aqui é da ${CLINICA}.`)}">Conversar no WhatsApp</a></div>
+    </div>
+    <div class="seg">${abas.map(([k,n]) => `<button data-tab="${k}" aria-pressed="${fichaTab === k}">${n}</button>`).join("")}</div>
+    <div class="card">${corpo}</div>`;
+}
+$("#fichaCorpo").addEventListener("click", e => {
+  const t = e.target.closest("[data-tab]");
+  if (t) { fichaTab = t.dataset.tab; return renderFicha(); }
+  const d = e.target.closest("[data-del]");
+  if (d) { const [k,id] = d.dataset.del.split(":"); const a = an(fichaId); a[k] = a[k].filter(x => x.id !== id); persist(); renderFicha(); return atualizarBadge(); }
+  const ad = e.target.closest("[data-add]");
+  if (ad) {
+    const k = ad.dataset.add, a = an(fichaId), v = id => ($("#f-" + id)?.value || "").trim();
+    if (k === "vacinas") {
+      if (!v("nome") || !v("data")) return alert("Informe o nome e a data da vacina.");
+      a.vacinas.push({id:uid(), nome:v("nome"), data:v("data"), proxima:v("prox")});
+    } else if (k === "medicamentos") {
+      if (!v("nome")) return alert("Informe o medicamento.");
+      a.medicamentos.push({id:uid(), nome:v("nome"), dose:v("dose"), data:v("data") || hojeISO()});
+    } else if (k === "observacoes") {
+      if (!v("texto")) return;
+      a.observacoes.push({id:uid(), texto:v("texto"), data:hojeISO()});
+    }
+    persist(); renderFicha(); atualizarBadge();
+  }
+});
+
+/* ===== LEMBRETES (semi-automáticos pelo WhatsApp) ===== */
+function listaLembretes(){
+  const cons = db.consultas
+    .filter(k => k.status === "agendada" && diffDias(k.data) >= 0 && diffDias(k.data) <= JANELA_CONSULTA)
+    .sort((a,b) => a.data.localeCompare(b.data));
+  const vac = [];
+  db.animais.forEach(a => a.vacinas.forEach(v => { if (v.proxima && diffDias(v.proxima) <= JANELA_VACINA) vac.push({a, v}); }));
+  vac.sort((x,y) => x.v.proxima.localeCompare(y.v.proxima));
+  return {cons, vac};
+}
+function atualizarBadge(){
+  const {cons, vac} = listaLembretes();
+  const n = cons.filter(k => !k.confirmada).length + vac.length;
+  const b = $("#badge"); b.textContent = n; b.classList.toggle("hidden", !n);
+}
+function renderLembretes(){
+  const {cons, vac} = listaLembretes();
+  $("#lembConsultas").innerHTML = cons.length ? cons.map(k => {
+    const p = an(k.animalId), c = cli(k.clienteId), n = diffDias(k.data), sv = nomesDe(k.servicos);
+    const lemb = `Olá, ${c.nome}! Lembrete da ${CLINICA}: ${p.nome} tem atendimento ${n === 0 ? "hoje" : n === 1 ? "amanhã" : "em " + br(k.data)} (${sv}). Até lá! 🐾`;
+    const conf = `Olá, ${c.nome}! Podemos confirmar o atendimento de ${p.nome} em ${br(k.data)} (${sv})? Responda SIM para confirmar. 🐾`;
+    return `<div class="li" style="display:block"><b>${esc(p.nome)} · ${br(k.data)} <span class="badge ${k.confirmada ? "b-ok" : "b-wait"}">${k.confirmada ? "Confirmada" : "Aguardando"}</span></b>
+      <small>${quando(n)} · ${esc(sv)} · ${esc(c.nome)}</small>
+      <div class="acoes">
+        <a class="btn btn-wa btn-small" target="_blank" rel="noopener" href="${waCliente(c.whatsapp, lemb)}">Lembrar</a>
+        <a class="btn btn-wa btn-small" target="_blank" rel="noopener" href="${waCliente(c.whatsapp, conf)}">Pedir confirmação</a>
+        <button class="btn btn-line btn-small" data-conf="${k.id}">${k.confirmada ? "Desmarcar" : "Marcar confirmada"}</button>
+      </div></div>`;
+  }).join("") : '<p class="vazio">Nenhuma consulta nos próximos dias.</p>';
+
+  $("#lembVacinas").innerHTML = vac.length ? vac.map(({a, v}) => {
+    const c = cli(a.clienteId), n = diffDias(v.proxima);
+    const msg = `Olá, ${c.nome}! A vacina ${v.nome} do ${a.nome} está prevista para ${br(v.proxima)}. Quer agendar? 🐾`;
+    return `<div class="li" style="display:block"><b>${esc(a.nome)} · ${esc(v.nome)} <span class="badge ${n < 0 ? "b-no" : "b-wait"}">${n < 0 ? "Atrasada" : "A vencer"}</span></b>
+      <small>Próxima dose: ${br(v.proxima)} (${quando(n)}) · ${esc(c.nome)}</small>
+      <div class="acoes"><a class="btn btn-wa btn-small" target="_blank" rel="noopener" href="${waCliente(c.whatsapp, msg)}">Lembrar vacina</a></div></div>`;
+  }).join("") : '<p class="vazio">Nenhuma vacina a vencer.</p>';
+}
+$("#lembConsultas").addEventListener("click", e => {
+  const b = e.target.closest("[data-conf]"); if (!b) return;
+  const k = db.consultas.find(x => x.id === b.dataset.conf); k.confirmada = !k.confirmada;
+  persist(); renderLembretes(); atualizarBadge();
+});
+
+/* ===== PAINEL ===== */
+function renderPainel(){
+  const real = db.consultas.filter(k => k.status === "realizada");
+  const total = real.reduce((t,k) => t + k.valor, 0);
+  const mes = real.filter(k => k.data.slice(0,7) === hojeISO().slice(0,7)).reduce((t,k) => t + k.valor, 0);
+  const cards = [
+    [db.clientes.length, "Clientes"], [db.animais.length, "Animais"],
+    [db.consultas.length, "Consultas"], [real.length, "Atendimentos realizados"],
+    [brl(total), "Faturamento total"], [brl(mes), "Faturamento do mês"]
+  ];
+  $("#stats").innerHTML = cards.map(([v,n]) => `<div class="stat"><b>${v}</b><span>${n}</span></div>`).join("");
+
+  const l = [...db.consultas].sort((a,b) => b.data.localeCompare(a.data)).slice(0, 30);
+  $("#listaConsultas").innerHTML = l.length ? l.map(k => {
+    const p = an(k.animalId), c = cli(k.clienteId), [nome, cls] = STATUS[k.status];
+    const acoes = k.status === "agendada"
+      ? `<button class="btn btn-main btn-small" data-st="realizada:${k.id}">Realizada</button><button class="btn btn-line btn-small" data-st="cancelada:${k.id}">Cancelar</button>`
+      : `<button class="btn btn-line btn-small" data-st="agendada:${k.id}">Reabrir</button>`;
+    return `<div class="li" style="display:block"><b>${esc(p ? p.nome : "—")} · ${br(k.data)} <span class="badge ${cls}">${nome}</span></b>
+      <small>${esc(nomesDe(k.servicos))} · ${esc(c.nome)}${k.status === "realizada" ? " · " + brl(k.valor) : ""}</small>
+      <div class="acoes">${acoes}</div></div>`;
+  }).join("") : '<p class="vazio">Nenhuma consulta ainda.</p>';
+  $("#blocoDemo").classList.toggle("hidden", !db.demo);
+}
+$("#listaConsultas").addEventListener("click", e => {
+  const b = e.target.closest("[data-st]"); if (!b) return;
+  const [st, id] = b.dataset.st.split(":"), k = db.consultas.find(x => x.id === id);
+  if (st === "realizada") {
+    const prev = precoDe(k.servicos);
+    const r = prompt("Valor cobrado (R$):", String(prev).replace(".", ","));
+    if (r === null) return;
+    let v = parseFloat(r.replace(",", ".")); if (isNaN(v)) v = prev;
+    k.valor = v; k.status = "realizada";
+  } else if (st === "cancelada") { k.status = "cancelada"; k.valor = 0; }
+  else { k.status = "agendada"; k.valor = 0; }
+  persist(); renderPainel(); atualizarBadge();
+});
+$("#apagarDemo").onclick = () => {
+  if (!confirm("Apagar todos os dados de exemplo (clientes, animais, consultas e avaliações)?")) return;
+  db = {clientes:[], animais:[], consultas:[], avaliacoes:[]}; persist(); setTela("painel");
+};
+
+/* ===== AVALIAÇÕES ===== */
+let notaSel = 5;
+function renderEstrelas(){
+  $("#estrelas").innerHTML = [1,2,3,4,5].map(n => `<button type="button" data-n="${n}" aria-label="${n} estrelas" aria-pressed="${n <= notaSel}">★</button>`).join("");
+}
+$("#estrelas").addEventListener("click", e => { const b = e.target.closest("[data-n]"); if (b) { notaSel = +b.dataset.n; renderEstrelas(); } });
+function renderAval(){
+  renderEstrelas();
+  const l = [...db.avaliacoes].sort((a,b) => b.data.localeCompare(a.data));
+  const media = l.length ? (l.reduce((t,r) => t + r.nota, 0) / l.length).toFixed(1).replace(".", ",") : null;
+  $("#mediaAval").textContent = media ? `Nota média: ${media} de 5 (${l.length} avaliações)` : "Seja o primeiro a avaliar.";
+  $("#listaAval").innerHTML = l.length ? l.map(r => `<div class="li" style="display:block"><b>${esc(r.nome)} <span class="nota">${"★".repeat(r.nota)}${"☆".repeat(5 - r.nota)}</span></b>${r.texto ? `<small>${esc(r.texto)}</small>` : ""}<small>${br(r.data)}</small></div>`).join("")
+    : '<p class="vazio">Ainda não há avaliações.</p>';
+}
+$("#formAval").addEventListener("submit", e => {
+  e.preventDefault();
+  const nome = $("#avNome").value.trim();
+  if (!nome) return $("#erroAval").textContent = "Informe seu nome.";
+  $("#erroAval").textContent = "";
+  db.avaliacoes.push({id:uid(), nome, nota:notaSel, texto:$("#avTexto").value.trim(), data:hojeISO()});
+  persist(); $("#avNome").value = ""; $("#avTexto").value = ""; notaSel = 5; renderAval();
+});
+
+if (load("vet2_session", null)) entrar();
+</script>
+</body>
+</html>
